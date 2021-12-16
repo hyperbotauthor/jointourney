@@ -1,2 +1,0 @@
-# jointourney
-join tourney
