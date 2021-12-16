@@ -54,4 +54,4 @@ async function signUp(variant){
     }
 }
 
-signUp("atomic")
+signUp(process.env.TOURNEY_VARIANT || "atomic")
