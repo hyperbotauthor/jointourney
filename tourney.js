@@ -48,14 +48,16 @@ async function signUp(variant) {
   }
 
   const created = tourneys.created.filter((t) => t.variant.key === variant);
+  const started = tourneys.started.filter((t) => t.variant.key === variant);
 
-  for (let t of created) {
+  for (let t of started.concat(created)) {
+    const startingIn = t.secondsToStart ? `starting in ${Math.floor(t.secondsToStart / 60)} min(s)` : `finishes in ${Math.floor((t.finishesAt - new Date().getTime())/60000)} min(s)`    
     console.log(
       `joining "${t.fullName}" ( id = ${t.id} ) , time control ${
         t.clock.limit
       } + ${t.clock.increment} , length ${
         t.minutes
-      } min(s) , starting in ${Math.floor(t.secondsToStart / 60)} min(s) , ${
+      } min(s) , ${startingIn} , ${
         t.nbPlayers
       } player(s)`
     );
