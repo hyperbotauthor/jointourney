@@ -2,6 +2,8 @@
 
 Join upcoming lichess tourneys automatically of a certain variant.
 
+# [Lichess blog post explaining jointourney](https://lichess.org/@/hyperchessbotauthor/blog/auto-join-tourneys-of-a-certain-variant/phxDsGo4)
+
 ## Usage
 
 ```bash
