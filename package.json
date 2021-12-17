@@ -1,5 +1,9 @@
 {
+  "scripts": {
+    "pretty":"yarn prettier -w tourney.js"
+  },
   "dependencies": {
-    "node-fetch": "2.6.5"
+    "node-fetch": "2.6.5",
+    "prettier": "^2.5.1"
   }
 }
