@@ -53,17 +53,17 @@ async function signUp(variant) {
 
   for (let t of started.concat(created)) {
     const startingIn = t.secondsToStart
-      ? `starting in ${colors.blue(Math.floor(t.secondsToStart / 60))} min(s)`
+      ? `starting in ${colors.cyan(Math.floor(t.secondsToStart / 60))} min(s)`
       : `finishes in ${colors.green(
           Math.floor((t.finishesAt - new Date().getTime()) / 60000)
         )} min(s)`;
     const tourneyName = t.secondsToStart
-      ? `${colors.blue(t.fullName)}`
+      ? `${colors.cyan(t.fullName)}`
       : `${colors.green(t.fullName)}`;
     console.log(
       `joining ${tourneyName} , ${colors.red.bold(
         t.clock.limit / 60
-      )} + ${colors.cyan.bold(t.clock.increment)} , ${colors.magenta(
+      )} + ${colors.blue.bold(t.clock.increment)} , ${colors.magenta(
         t.minutes
       )} min(s) , ${startingIn} , ${colors.yellow(t.nbPlayers)} player(s)`
     );
