@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
+const colors = require("colors");
 
 const API_BASE_URL = "https://lichess.org/api";
 
@@ -51,15 +52,20 @@ async function signUp(variant) {
   const started = tourneys.started.filter((t) => t.variant.key === variant);
 
   for (let t of started.concat(created)) {
-    const startingIn = t.secondsToStart ? `starting in ${Math.floor(t.secondsToStart / 60)} min(s)` : `finishes in ${Math.floor((t.finishesAt - new Date().getTime())/60000)} min(s)`    
+    const startingIn = t.secondsToStart
+      ? `starting in ${colors.blue(Math.floor(t.secondsToStart / 60))} min(s)`
+      : `finishes in ${colors.green(
+          Math.floor((t.finishesAt - new Date().getTime()) / 60000)
+        )} min(s)`;
+    const tourneyName = t.secondsToStart
+      ? `${colors.blue(t.fullName)}`
+      : `${colors.green(t.fullName)}`;
     console.log(
-      `joining "${t.fullName}" ( id = ${t.id} ) , time control ${
-        t.clock.limit
-      } + ${t.clock.increment} , length ${
+      `joining ${tourneyName} , ${colors.red.bold(
+        t.clock.limit / 60
+      )} + ${colors.cyan.bold(t.clock.increment)} , ${colors.magenta(
         t.minutes
-      } min(s) , ${startingIn} , ${
-        t.nbPlayers
-      } player(s)`
+      )} min(s) , ${startingIn} , ${colors.yellow(t.nbPlayers)} player(s)`
     );
 
     const resp = await api(`tournament/${t.id}/join`, {
