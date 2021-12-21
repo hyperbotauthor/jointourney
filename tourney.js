@@ -51,7 +51,11 @@ async function signUp(variant) {
   const created = tourneys.created.filter((t) => t.variant.key === variant);
   const started = tourneys.started.filter((t) => t.variant.key === variant);
 
-  for (let t of started.concat(created)) {
+  let effTourneys = started.concat(created);
+
+  if (process.env.REVERSE_TOURNEY_ORDER === "true") effTourneys.reverse();
+
+  for (let t of effTourneys) {
     const startingIn = t.secondsToStart
       ? `starting in ${colors.cyan(Math.floor(t.secondsToStart / 60))} min(s)`
       : `finishes in ${colors.green(

@@ -27,3 +27,9 @@ Lichess API access token with tourney scope.
 Optional. Default is `atomic`.
 
 Variant key of tourney to join.
+
+#### REVERSE_TOURNEY_ORDER
+
+Optional. Default is `false`.
+
+Set it to `true` to list tourneys in reverse order.
