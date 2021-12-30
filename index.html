@@ -1,3 +1,22 @@
+<script>
+  const LICHESS_VARIANTS = [
+    { display: "Standard", key: "standard" },
+    { display: "Atomic", key: "atomic" },
+    { display: "Antichess", key: "antichess" },
+    { display: "Crazyhose", key: "crazyhouse" },
+    { display: "Horde", key: "horde" },
+    { display: "King of the Hill", key: "kingOfTheHill" },
+    { display: "Racing Kings", key: "racingKings" },
+    { display: "Three Check", key: "threeCheck" },
+  ];
+
+  function variant2display(key) {
+    const v = LICHESS_VARIANTS.find((v) => v.key === key);
+    if (v) return v.display;
+    return "Standard";
+  }
+</script>
+
 <style>
   table {
     border-collapse: collapse;
@@ -14,6 +33,15 @@
 <button id="loginbutton">Login</button>
 <button id="logoutbutton">Logout</button>
 <span id="showusernamediv"></span>
+
+|
+
+<a
+  rel="noopener noreferrer"
+  target="_blank"
+  href="https://lichess.org/@/hyperchessbotauthor/blog/fun-way-to-auto-join-tourneys/OSNmwH7K"
+  >Read More</a
+>
 
 <hr />
 
@@ -43,14 +71,14 @@
   </select>
   <hr />
   <table>
-    <tr>
-      <td style="min-width: 300px">name</td>
-      <td>minutes</td>
-      <td>initial</td>
-      <td>inc</td>
-      <td>starts in min(s)</td>
-      <td>player(s)</td>
-      <td>open</td>
+    <tr style="font-size: 12px">
+      <td style="min-width: 300px">Tourney Mame</td>
+      <td>Length</td>
+      <td>Onitial</td>
+      <td>Inc</td>
+      <td>Starts in min(s)</td>
+      <td>Player(s)</td>
+      <td>Open</td>
     </tr>
     <tr v-for="t in tourneys">
       <td
@@ -60,13 +88,15 @@
       </td>
       <td style="color: #707; font-weight: bold">{{ t.minutes }}</td>
       <td style="color: #700; font-weight: bold">{{ t.clock.limit/60 }}</td>
-      <td>{{ t.clock.increment }}</td>
-      <td style="color: #007; font-weight: bold">
+      <td>{{ t.clock.increment || "-" }}</td>
+      <td
+        :style="`color: #007; font-weight: bold; color: ${t.secondsToStart?'#007':'#070'}`"
+      >
         {{ Math.floor(((t.startsAt||new Date().getTime()) - new
         Date().getTime())/6000)/10 }}
       </td>
 
-      <td style="color: #077; font-weight: bold">{{ t.nbPlayers }}</td>
+      <td style="color: #770; font-weight: bold">{{ t.nbPlayers }}</td>
       <td style="padding-left: 10px; padding-right: 10px; font-size: 10px">
         <a
           rel="noopener noreferrer"
@@ -164,16 +194,7 @@
     message: "",
     tourneys: [],
     variant,
-    variants: [
-      { display: "Standard", key: "standard" },
-      { display: "Atomic", key: "atomic" },
-      { display: "Antichess", key: "antichess" },
-      { display: "Crazyhose", key: "crazyhouse" },
-      { display: "Horde", key: "horde" },
-      { display: "King of the Hill", key: "kingOfTheHill" },
-      { display: "Racing Kings", key: "racingKings" },
-      { display: "Three Check", key: "threeCheck" },
-    ],
+    variants: LICHESS_VARIANTS,
   };
 
   async function refresh() {
@@ -193,7 +214,7 @@
     data,
   });
 
-  document.title = `${variant} Tourneys`;
+  document.title = `Join ${variant2display(variant)} Tourneys`;
 
   refresh();
   signUp(variant);
