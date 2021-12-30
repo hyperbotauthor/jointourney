@@ -1,12 +1,60 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
-<div id="app">{{ message }}</div>
+<div id="app"><pre>{{ message }}</pre></div>
 
 <script>
-  var app = new Vue({
-    el: "#app",
-    data: {
-      message: "Hello Vue!",
-    },
-  });
+  const API_BASE_URL = "https://lichess.org/api";
+
+  function api(endpoint, opts) {
+    return new Promise((resolve) => {
+      fetch(`${API_BASE_URL}/${endpoint}`, opts || {})
+        .then((resp) => {
+          resp
+            .json()
+            .then((json) => resolve(json))
+            .catch((err) => {
+              console.error("could not parse response json", err);
+              resp
+                .text()
+                .then((text) => {
+                  resolve(text);
+                })
+                .catch((err) => {
+                  console.error("could not resolve response text", err);
+                  resolve(undefined);
+                });
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+          resolve(undefined);
+        });
+    });
+  }
+
+  function getTourneys() {
+    return new Promise((resolve) => {
+      api("tournament").then((tourneys) => {
+        resolve(tourneys);
+      });
+    });
+  }
+
+  async function init() {
+    const variant = "atomic";
+    const tourneys = await getTourneys();
+    const created = tourneys.created.filter((t) => t.variant.key === variant);
+    const started = tourneys.started.filter((t) => t.variant.key === variant);
+
+    let effTourneys = started.concat(created);
+
+    var app = new Vue({
+      el: "#app",
+      data: {
+        message: JSON.stringify(effTourneys, null, 2),
+      },
+    });
+  }
+
+  init();
 </script>
