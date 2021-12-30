@@ -11,6 +11,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
+<button id="loginbutton">Login</button>
+<button id="logoutbutton">Logout</button>
+<span id="showusernamediv"></span>
+
+<hr />
+
+<script src="pkce.js"></script>
+<script src="auth.js"></script>
+
 <div id="app">
   <table>
     <tr>
@@ -88,6 +97,48 @@
     });
   }
 
+  async function signUp(variant) {
+    const tourneys = await getTourneys();
+
+    if (!tourneys) {
+      console.error("could not get tourneys");
+      return;
+    }
+
+    const created = tourneys.created.filter((t) => t.variant.key === variant);
+    const started = tourneys.started.filter((t) => t.variant.key === variant);
+
+    let effTourneys = started.concat(created);
+
+    for (let t of effTourneys) {
+      const startingIn = t.secondsToStart
+        ? `starting in ${Math.floor(t.secondsToStart / 60)} min(s)`
+        : `finishes in ${Math.floor(
+            (t.finishesAt - new Date().getTime()) / 60000
+          )} min(s)`;
+      const tourneyName = t.secondsToStart ? `${t.fullName}` : `${t.fullName}`;
+      console.log(
+        `joining ${tourneyName} , ${t.clock.limit / 60} + ${
+          t.clock.increment
+        } , ${t.minutes} min(s) , ${startingIn} , ${t.nbPlayers} player(s)`
+      );
+
+      const resp = await api(`tournament/${t.id}/join`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("LICHESS_TOKEN")}`,
+        },
+        body: "",
+      });
+
+      if (resp.ok) {
+        console.log("done");
+      } else {
+        console.error("failed");
+      }
+    }
+  }
+
   const data = {
     message: "",
     tourneys: [],
@@ -115,8 +166,13 @@
   document.title = `${variant} Tourneys`;
 
   refresh();
+  signUp(variant);
 
   setInterval(() => {
     refresh();
   }, 6000);
+
+  setInterval(() => {
+    signUp(variant);
+  }, 60000);
 </script>
