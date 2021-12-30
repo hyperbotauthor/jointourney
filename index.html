@@ -20,7 +20,28 @@
 <script src="pkce.js"></script>
 <script src="auth.js"></script>
 
+<script>
+  const variantMatch = document.location.href.match("variant=([a-zA-Z]+)");
+  const variant = variantMatch ? variantMatch[1] : "standard";
+
+  function selectVariant() {
+    document.location.href = `/?variant=${
+      document.getElementById("variantselect").value
+    }`;
+  }
+</script>
+
 <div id="app">
+  <select onchange="selectVariant()" id="variantselect">
+    <option
+      v-for="currVariant in variants"
+      :value="currVariant.key"
+      :selected="currVariant.key === variant"
+    >
+      {{ currVariant.display }}
+    </option>
+  </select>
+  <hr />
   <table>
     <tr>
       <td style="min-width: 300px">name</td>
@@ -142,9 +163,18 @@
   const data = {
     message: "",
     tourneys: [],
+    variant,
+    variants: [
+      { display: "Standard", key: "standard" },
+      { display: "Atomic", key: "atomic" },
+      { display: "Antichess", key: "antichess" },
+      { display: "Crazyhose", key: "crazyhouse" },
+      { display: "Horde", key: "horde" },
+      { display: "King of the Hill", key: "kingOfTheHill" },
+      { display: "Racing Kings", key: "racingKings" },
+      { display: "Three Check", key: "threeCheck" },
+    ],
   };
-
-  const variant = "atomic";
 
   async function refresh() {
     const tourneys = await getTourneys();
