@@ -1,10 +1,14 @@
 {
   "scripts": {
-    "pretty": "yarn prettier -w tourney.js"
+    "pretty": "yarn prettier -w tourney.js index.html",
+    "serve": "http-server"
   },
   "dependencies": {
     "colors": "^1.4.0",
     "node-fetch": "2.6.5",
     "prettier": "^2.5.1"
+  },
+  "devDependencies": {
+    "http-server": "^14.0.0"
   }
 }
