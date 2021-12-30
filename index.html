@@ -1,6 +1,41 @@
+<style>
+  td {
+    text-align: center;
+  }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
-<div id="app"><pre>{{ message }}</pre></div>
+<div id="app">
+  <table border="1" cellpadding="5">
+    <tr>
+      <td>name</td>
+      <td>minutes</td>
+      <td>initial</td>
+      <td>increment</td>
+      <td>starts in min(s)</td>
+      <td>player(s)</td>
+      <td>open</td>
+    </tr>
+    <tr v-for="t in tourneys">
+      <td>{{ t.fullName }}</td>
+      <td>{{ t.minutes }}</td>
+      <td>{{ t.clock.limit/60 }}</td>
+      <td>{{ t.clock.increment }}</td>
+      <td>{{ Math.floor((t.startsAt - new Date().getTime())/60000) }}</td>
+      <td>{{ t.nbPlayers }}</td>
+      <td>
+        <a
+          rel="noopener noreferrer"
+          target="_blank"
+          :href="`https://lichess.org/tournament/${t.id}`"
+          >{{ t.id }}</a
+        >
+      </td>
+    </tr>
+  </table>
+  <pre></pre>
+</div>
 
 <script>
   const API_BASE_URL = "https://lichess.org/api";
@@ -52,9 +87,14 @@
       el: "#app",
       data: {
         message: JSON.stringify(effTourneys, null, 2),
+        tourneys: effTourneys,
       },
     });
   }
 
   init();
+
+  setTimeout(() => {
+    document.location.reload();
+  }, 30000);
 </script>
