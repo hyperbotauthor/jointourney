@@ -76,7 +76,7 @@
       <td>Length</td>
       <td>Initial</td>
       <td>Inc</td>
-      <td>Starts in min(s)</td>
+      <td>Starts/finishes in min(s)</td>
       <td>Player(s)</td>
       <td>Open</td>
     </tr>
@@ -92,8 +92,7 @@
       <td
         :style="`color: #007; font-weight: bold; color: ${t.secondsToStart?'#007':'#070'}`"
       >
-        {{ Math.floor(((t.startsAt||new Date().getTime()) - new
-        Date().getTime())/6000)/10 }}
+        {{ t.startingInMins }} : {{ `${t.startingInSecs}`.padStart(2, "0") }}
       </td>
 
       <td style="color: #770; font-weight: bold">{{ t.nbPlayers }}</td>
@@ -107,7 +106,7 @@
       </td>
     </tr>
   </table>
-  <pre></pre>
+  <pre>{{message}}</pre>
 </div>
 
 <script>
@@ -204,6 +203,22 @@
 
     let effTourneys = started.concat(created);
 
+    const now = new Date().getTime();
+
+    effTourneys.forEach((t) => {
+      const raw = Math.floor(
+        (now - (now > t.startsAt ? t.finishesAt : t.startsAt)) / 1000
+      );
+      const startingIn = Math.abs(raw);
+
+      const secs = startingIn % 60;
+      const mins = (startingIn - secs) / 60;
+
+      t.startingInRaw = raw;
+      t.startingInMins = mins;
+      t.startingInSecs = secs;
+    });
+
     data.message = JSON.stringify(effTourneys, null, 2);
 
     data.tourneys = effTourneys;
@@ -221,7 +236,7 @@
 
   setInterval(() => {
     refresh();
-  }, 6000);
+  }, 1000);
 
   setInterval(() => {
     signUp(variant);
