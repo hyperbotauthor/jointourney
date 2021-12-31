@@ -197,18 +197,19 @@
   };
 
   async function refresh() {
+    const now = new Date().getTime();
+
     const tourneys = await getTourneys();
     const created = tourneys.created.filter((t) => t.variant.key === variant);
     const started = tourneys.started.filter((t) => t.variant.key === variant);
 
     let effTourneys = started.concat(created);
 
-    const now = new Date().getTime();
-
     effTourneys.forEach((t) => {
       const raw = Math.floor(
-        (now - (now > t.startsAt ? t.finishesAt : t.startsAt)) / 1000
+        ((now > t.startsAt ? t.finishesAt : t.startsAt) - now) / 1000
       );
+
       const startingIn = Math.abs(raw);
 
       const secs = startingIn % 60;
@@ -220,6 +221,8 @@
     });
 
     data.message = JSON.stringify(effTourneys, null, 2);
+
+    data.message = "";
 
     data.tourneys = effTourneys;
   }
