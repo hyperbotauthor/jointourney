@@ -92,7 +92,10 @@
       <td
         :style="`color: #007; font-weight: bold; color: ${t.secondsToStart?'#007':'#070'}`"
       >
-        {{ t.startingInMins }} : {{ `${t.startingInSecs}`.padStart(2, "0") }}
+        {{ t.startingInMins }}
+        <span style="font-size: 10px"
+          >: {{ `${t.startingInSecs}`.padStart(2, "0") }}</span
+        >
       </td>
 
       <td style="color: #770; font-weight: bold">{{ t.nbPlayers }}</td>
