@@ -82,7 +82,9 @@
     </tr>
     <tr v-for="t in tourneys">
       <td
-        :style="`font-size: 14px;font-family: monospace;color: ${t.secondsToStart ? '#007':'#070'}`"
+        v-on:click="tourneyClicked"
+        :id="t.id"
+        :style="`cursor:pointer;font-size: 14px;font-family: monospace;color: ${t.secondsToStart ? '#007':'#070'}`"
       >
         {{ t.fullName }}
       </td>
@@ -233,6 +235,11 @@
   var app = new Vue({
     el: "#app",
     data,
+    methods: {
+      tourneyClicked(ev) {
+        document.location.href = `https://lichess.org/tournament/${ev.target.id}`;
+      },
+    },
   });
 
   document.title = `Join ${variant2display(variant)} Tourneys`;
